@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, Fragment } from 'react';
+import { Switch, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+import Login from './pages/Login';
+import EmpList from './pages/EmpList';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+class App extends Component {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     isAuthenticated: true
+  //   }
+  // }
 
-export default App;
+
+  render() {
+    let routes = (
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route path="/**" component={Login} />
+      </Switch>
+    )
+
+    if (this.props.isAuth) {
+      routes = (
+        <Switch>
+            <Route path="/" exact component={EmpList} />
+        </Switch>
+      );
+    }
+    return (
+      <Fragment>
+        {routes}
+      </Fragment>
+    )
+  }
+};
+
+const mapStateToProps = (state) => {
+  return {
+    isAuth: state.authReducer.isAuth
+  }
+};
+
+export default connect(mapStateToProps)(App);
